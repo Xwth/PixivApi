@@ -1,2 +1,3 @@
-pixivapiEnv/
+venv/
 images/
+*.pyc
