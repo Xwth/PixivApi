@@ -1,0 +1,24 @@
+login:
+    username: 
+    password: 
+
+common:
+    profile_image_sizes: px_170x170,px_50x50
+    image_sizes: px_480mw, px_128x128, small, medium, large 
+    types: illustration, manga, ugoira
+    per_page: 50 
+    include_stats: True
+    include_profile: 1
+    include_workspace: 1
+    include_contacts: 1 
+    include_sanity_level: True
+
+illust:
+    image_sizes: px_480mw, px_128x128, small, medium, large #which ones to include
+    include_stats: True
+
+search_work:
+    per_page: 30 # 1-n
+    mode: tag    # text, tag, exact_tag or caption
+    period: all  # all, day, week, month
+    order: desc  # asc, desc
