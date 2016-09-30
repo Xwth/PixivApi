@@ -14,6 +14,12 @@ from . import __version__
 class JsonDict(dict):
 	def __getattr__(self, attr):
 		try:
+			if isinstance(self[attr], dict):
+				self[attr] = JsonDict(self[attr])
+			elif isinstance(self[attr], list):
+				for idx, value in enumerate(self[attr]):
+					if isinstance(value, dict):
+						self[attr][idx] = JsonDict(value)
 			return self[attr]
 		except KeyError:
 			raise AttributeError(r"'JsonDict' object has no attribute '%s'" % attr)
@@ -75,7 +81,6 @@ class Pixiv:
 			or self.data['expires_in'] <= (time() - 60)
 		):
 			self._renew_token()
-
 		auth = {'Authorization': 'Bearer {}'.format(
 				self.data['access_token'])}
 		self.session.headers.update(auth)
@@ -128,15 +133,15 @@ class Pixiv:
 			list(map(f.write, data))
 
 	def _download_gallery(self, illust):
-		path = os.path.join('images',str(illust.user['id']), str(illust.id))
-		for url in illust.metadata['pages']:
+		path = os.path.join('images',str(illust.user.id), str(illust.id))
+		for url in illust.metadata.pages:
 			r = self.session.get('{[image_urls][large]}'.format(url))
 			file = urlparse(r.url).path.split('/')[-1]
 			if r.ok:
 				self._write(r, path, file)
 
 	def _download_image(self, illust):
-		path = os.path.join('images',str(illust.user['id']), str(illust.id))
+		path = os.path.join('images',str(illust.user.id), str(illust.id))
 		url = illust.image_urls
 		r = self.session.get('{[large]}'.format(url))
 		file = urlparse(r.url).path.split('/')[-1]
